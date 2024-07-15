@@ -80,7 +80,7 @@ body {
   font-size: calc(14rem / 16);
 }
 
-.notes-list:hover {
+.notes-list:hover,  .notes-list.active{
   background-color: #2b415e;
   color: #fff;
   font-weight: 600;
@@ -89,6 +89,15 @@ body {
 .notes-list:hover > .note-list--delete-btn {
   display: block
 }
+
+.notes-list--text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+
 
 .note-list--delete-btn {
   display: none;

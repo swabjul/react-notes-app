@@ -1,9 +1,48 @@
+import { useState, useId, useEffect } from "react";
 import Editor from "./components/Editor";
 import Sidebar from "./components/Sidebar";
 import Split from "react-split";
 import "./styles/App.css"
 
 export default function App() {
+
+
+  const [notes, setNotes] = useState([
+    {
+      id: 1,
+      body: "This is text number wan wan wan wan wan wan wan wan wan wan wan wan wan wan wan  "
+    },
+    {
+      id: 2,
+      body: "This is text number tu"
+    }
+  ])
+
+  const [currentNoteId, setCurrentNoteId] = useState(
+    notes[0]?.id || ""
+  )
+
+
+  function createNewNote() {
+    const newNote = {
+      id: notes.length + 1,
+      body: "THIS IS NEW NOTE"
+    }
+    setNotes(prevNotes => [newNote, ...prevNotes])
+  }
+
+  function deleteNote(event, noteId) {
+    event.stopPropagation()
+    setNotes(prevNote => prevNote.filter(note => note.id !== noteId))
+  }
+
+
+
+
+
+
+
+
   return (
     <main>
       <Split
@@ -18,7 +57,13 @@ export default function App() {
         cursor="col-resize"
         className="split"
       >
-        <Sidebar />
+        <Sidebar 
+          notes={notes}
+          createNewNote={createNewNote}
+          deleteNote={deleteNote}
+          currentNoteId={currentNoteId}
+          setCurrentNoteId={setCurrentNoteId}
+        />
         <Editor />
       </Split>
 
