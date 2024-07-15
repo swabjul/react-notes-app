@@ -3,37 +3,50 @@ import Editor from "./components/Editor";
 import Sidebar from "./components/Sidebar";
 import Split from "react-split";
 import "./styles/App.css"
+import { onSnapshot, addDoc, doc, deleteDoc } from "firebase/firestore";
+import { notesCollection, db } from "./utils/firebase";
 
 export default function App() {
 
 
-  const [notes, setNotes] = useState([
-    {
-      id: 1,
-      body: "This is text number wan wan wan wan wan wan wan wan wan wan wan wan wan wan wan  "
-    },
-    {
-      id: 2,
-      body: "This is text number tu"
+  const [notes, setNotes] = useState([])
+
+  const [currentNoteId, setCurrentNoteId] = useState("")
+
+  onSnapshot
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(notesCollection, snapshot => {
+      const notesArray = snapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id
+      }))
+      setNotes(notesArray)
+      console.log("Change")
+    })
+
+    return unsubscribe
+  },[])
+
+  useEffect(() => {
+    if(!currentNoteId) {
+      setCurrentNoteId(notes[0]?.id)
     }
-  ])
-
-  const [currentNoteId, setCurrentNoteId] = useState(
-    notes[0]?.id || ""
-  )
+  },[notes])
 
 
-  function createNewNote() {
+  async function createNewNote() {
     const newNote = {
-      id: notes.length + 1,
-      body: "THIS IS NEW NOTE"
+      body: `# Type your markdown note's title here ${notes.length + 1}`
     }
-    setNotes(prevNotes => [newNote, ...prevNotes])
+
+    const newNoteRef = await addDoc(notesCollection, newNote)
+    setCurrentNoteId(newNoteRef.id)
   }
 
-  function deleteNote(event, noteId) {
-    event.stopPropagation()
-    setNotes(prevNote => prevNote.filter(note => note.id !== noteId))
+  async function deleteNote(noteId) {
+    const docRef = doc(db, "notes", noteId)
+    await deleteDoc(docRef)
   }
 
 

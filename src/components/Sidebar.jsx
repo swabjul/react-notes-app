@@ -11,7 +11,7 @@ export default function Sidebar(props) {
         <h3 className="notes-list--text">{note.body}</h3>
         <button 
           className="note-list--delete-btn"
-          onClick={(event) => props.deleteNote(event, note.id)}
+          onClick={() => props.deleteNote(note.id)}
         ><i className="icon-delete"></i></button>
       </div>
     )
