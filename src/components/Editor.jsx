@@ -1,5 +1,10 @@
-export default function Editor() {
+export default function Editor(props) {
+
   return (
-    <h2>EDITOR</h2>
+    <textarea
+      className="editor-txt-area"
+      value={props.tempNoteText}
+      onChange={(event) => props.setTempNoteText(event.target.value)}
+    ></textarea>
   )
 }
